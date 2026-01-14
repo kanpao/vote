@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Real-time Election Result</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-10">
+
+  <h1 class="text-3xl font-bold text-center mb-10">ผลคะแนนเลือกตั้ง (Real-time)</h1>
+  
+  <div id="result-container" class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    กำลังโหลดข้อมูล...
+  </div>
+
+  <script>
+    // URL ของไฟล์ JSON (เปลี่ยน username และ repo เป็นของคุณ)
+    const DATA_URL = ''https://kanpao.github.io/vote/data.json';
+
+    async function fetchData() {
+      try {
+        // เทคนิคเติม ?t=... เพื่อแก้ปัญหา Browser จำค่าเดิม (Cache busting)
+        const response = await fetch(DATA_URL + '?t=' + new Date().getTime());
+        const data = await response.json();
+        renderData(data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    function renderData(data) {
+      const container = document.getElementById('result-container');
+      let html = '';
+      
+      // เรียงลำดับคะแนนมากไปน้อย
+      data.sort((a, b) => b.score - a.score);
+
+      data.forEach(item => {
+        html += `
+          <div class="mb-4">
+            <div class="flex justify-between mb-1">
+              <span class="text-lg font-medium">${item.name}</span>
+              <span class="text-lg font-bold text-blue-600">${item.score.toLocaleString()}</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+              <div class="bg-blue-600 h-4 rounded-full" style="width: ${(item.score/5000)*100}%"></div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // สั่งให้ดึงข้อมูลใหม่ทุกๆ 30 วินาที (โดยไม่ต้อง refresh หน้าจอ)
+    fetchData(); // รันครั้งแรกทันที
+    setInterval(fetchData, 30000); 
+  </script>
+
+</body>
+</html>

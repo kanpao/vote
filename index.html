@@ -1,59 +1,191 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-<title>Real-time Election Result</title>
-<script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ผลการเลือกตั้ง Real-time</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* บังคับใช้ฟอนต์ Kanit ทั้งหน้า */
+        body { font-family: 'Kanit', sans-serif; }
+        
+        /* Effect กราฟไหล */
+        .bar-transition { transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Animation เล็กน้อยตอนโหลด */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-card { animation: fadeIn 0.5s ease-out forwards; }
+    </style>
 </head>
-<body class="bg-gray-100 p-10">
+<body class="bg-slate-100 min-h-screen py-8 px-4">
 
-  <h1 class="text-3xl font-bold text-center mb-10">ผลคะแนนเลือกตั้ง (Real-time)</h1>
-  
-  <div id="result-container" class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-    กำลังโหลดข้อมูล...
-  </div>
-
-  <script>
-    // URL ของไฟล์ JSON (เปลี่ยน username และ repo เป็นของคุณ)
-    const DATA_URL = 'https://kanpao.github.io/vote/data.json';
-
-    async function fetchData() {
-      try {
-        // เทคนิคเติม ?t=... เพื่อแก้ปัญหา Browser จำค่าเดิม (Cache busting)
-        const response = await fetch(DATA_URL + '?t=' + new Date().getTime());
-        const data = await response.json();
-        renderData(data);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-    function renderData(data) {
-      const container = document.getElementById('result-container');
-      let html = '';
-      
-      // เรียงลำดับคะแนนมากไปน้อย
-      data.sort((a, b) => b.score - a.score);
-
-      data.forEach(item => {
-        html += `
-          <div class="mb-4">
-            <div class="flex justify-between mb-1">
-              <span class="text-lg font-medium">${item.name}</span>
-              <span class="text-lg font-bold text-blue-600">${item.score.toLocaleString()}</span>
+    <header class="mb-10 max-w-5xl mx-auto">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-center md:text-left">
+            
+            <img src="https://kanpaohealth.github.io/qrcode/images/kanpao-logo-160px.png" 
+                 alt="อบจ.กาญจนบุรี" 
+                 class="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-sm">
+            
+            <div>
+                <h1 class="text-2xl md:text-4xl font-bold text-slate-800 leading-tight">
+                    ผลคะแนนเลือกตั้งสมาชิกสภาองค์การบริหารส่วนจังหวัด<br class="hidden md:block">
+                    อ.ท่ามะกา เขต 5 จ.กาญจนบุรี
+                </h1>
+                <p class="text-blue-700 mt-2 text-xl md:text-2xl font-semibold">
+                    วันที่ 25 มกราคม 2569
+                </p>
+                <p class="text-slate-400 text-sm mt-1 font-light">
+                    (ข้อมูลอัปเดตอัตโนมัติทุก 60 วินาที)
+                </p>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-              <div class="bg-blue-600 h-4 rounded-full" style="width: ${(item.score/5000)*100}%"></div>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
+            
+        </div>
+        <div class="border-b-2 border-slate-200 w-3/4 mx-auto mt-6"></div>
+    </header>
+    
+    <main class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row gap-6 justify-center items-stretch">
 
-    // สั่งให้ดึงข้อมูลใหม่ทุกๆ 30 วินาที (โดยไม่ต้อง refresh หน้าจอ)
-    fetchData(); // รันครั้งแรกทันที
-    setInterval(fetchData, 30000); 
-  </script>
+            <div id="cand1-card" class="animate-card bg-white rounded-3xl shadow-lg overflow-hidden w-full md:w-1/2 border-t-8 border-pink-700 transform transition hover:scale-[1.01]">
+                <div class="p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
+                        
+                        <div class="relative shrink-0">
+                            <img id="cand1-img" src="https://via.placeholder.com/200?text=No.1" 
+                                 class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-[6px] border-pink-200 shadow-md">
+                            <div class="absolute bottom-0 right-0 bg-pink-700 text-white text-3xl font-bold w-14 h-14 rounded-full flex items-center justify-center border-4 border-white shadow-sm">
+                                <span id="cand1-num">1</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 mt-2">
+                            <h2 class="text-2xl text-pink-800 font-bold uppercase tracking-wide">
+                                ผู้สมัครหมายเลข <span id="cand1-num-text">1</span>
+                            </h2>
+                            <h3 id="cand1-name" class="text-3xl md:text-4xl font-bold text-slate-800 mt-2 leading-tight">
+                                กำลังโหลด...
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-6 bg-pink-50 rounded-2xl border border-pink-200">
+                         <div class="flex justify-between items-end mb-2">
+                            <span class="text-slate-600 text-lg">คะแนนรวม</span>
+                            <span id="cand1-score" class="text-5xl font-bold text-pink-800 tracking-tight">0</span>
+                        </div>
+                        
+                        <div class="w-full bg-pink-200 rounded-full h-8 p-1 shadow-inner relative">
+                            <div id="cand1-bar" class="bar-transition bg-gradient-to-r from-pink-600 to-pink-800 h-full rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: 0%">
+                                <span id="cand1-percent" class="text-white text-sm font-bold drop-shadow-md">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cand2-card" class="animate-card bg-white rounded-3xl shadow-lg overflow-hidden w-full md:w-1/2 border-t-8 border-pink-500 transform transition hover:scale-[1.01]" style="animation-delay: 0.1s;">
+                <div class="p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
+                        
+                        <div class="relative shrink-0">
+                            <img id="cand2-img" src="https://via.placeholder.com/200?text=No.2" 
+                                 class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-[6px] border-pink-100 shadow-md">
+                            <div class="absolute bottom-0 right-0 bg-pink-500 text-white text-3xl font-bold w-14 h-14 rounded-full flex items-center justify-center border-4 border-white shadow-sm">
+                                <span id="cand2-num">2</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 mt-2">
+                            <h2 class="text-2xl text-pink-600 font-bold uppercase tracking-wide">
+                                ผู้สมัครหมายเลข <span id="cand2-num-text">2</span>
+                            </h2>
+                            <h3 id="cand2-name" class="text-3xl md:text-4xl font-bold text-slate-800 mt-2 leading-tight">
+                                กำลังโหลด...
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-6 bg-pink-50 rounded-2xl border border-pink-100">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-slate-600 text-lg">คะแนนรวม</span>
+                            <span id="cand2-score" class="text-5xl font-bold text-pink-600 tracking-tight">0</span>
+                        </div>
+                        
+                        <div class="w-full bg-pink-100 rounded-full h-8 p-1 shadow-inner relative">
+                            <div id="cand2-bar" class="bar-transition bg-gradient-to-r from-pink-400 to-pink-600 h-full rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: 0%">
+                                <span id="cand2-percent" class="text-white text-sm font-bold drop-shadow-md">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+
+        // **********************************************
+        const DATA_URL = 'https://kanpao.github.io/vote/data.json'; 
+        const MAX_VOTES_POSSIBLE = 21608; // แก้เป็นจำนวนผู้มีสิทธิ์เลือกตั้งจริง
+        // **********************************************
+
+        async function fetchData() {
+            try {
+                const response = await fetch(DATA_URL + '?t=' + new Date().getTime());
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                updateDashboard(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function updateDashboard(data) {
+            // ฟังก์ชันช่วยใส่ลูกน้ำ (Comma)
+            const fmt = (num) => num.toLocaleString();
+
+            // --- คนที่ 1 ---
+            if (data[0]) {
+                const c1 = data[0];
+                const percent1 = MAX_VOTES_POSSIBLE > 0 ? (c1.score / MAX_VOTES_POSSIBLE) * 100 : 0;
+                
+                document.getElementById('cand1-name').innerText = c1.name;
+                document.getElementById('cand1-num').innerText = c1.number;
+                document.getElementById('cand1-num-text').innerText = c1.number; // อัปเดตเลขในข้อความ header ด้วย
+                document.getElementById('cand1-score').innerText = fmt(c1.score);
+                
+                document.getElementById('cand1-bar').style.width = Math.min(percent1, 100) + '%';
+                document.getElementById('cand1-percent').innerText = percent1.toFixed(1) + '%';
+                if(c1.imageUrl) document.getElementById('cand1-img').src = c1.imageUrl;
+            }
+
+             // --- คนที่ 2 ---
+             if (data[1]) {
+                const c2 = data[1];
+                const percent2 = MAX_VOTES_POSSIBLE > 0 ? (c2.score / MAX_VOTES_POSSIBLE) * 100 : 0;
+                
+                document.getElementById('cand2-name').innerText = c2.name;
+                document.getElementById('cand2-num').innerText = c2.number;
+                document.getElementById('cand2-num-text').innerText = c2.number;
+                document.getElementById('cand2-score').innerText = fmt(c2.score);
+                
+                document.getElementById('cand2-bar').style.width = Math.min(percent2, 100) + '%';
+                document.getElementById('cand2-percent').innerText = percent2.toFixed(1) + '%';
+                if(c2.imageUrl) document.getElementById('cand2-img').src = c2.imageUrl;
+            }
+        }
+
+        fetchData();
+        setInterval(fetchData, 30000);
+    </script>
 
 </body>
 </html>

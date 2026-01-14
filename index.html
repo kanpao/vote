@@ -36,40 +36,26 @@
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
         }
 
-        /* 🌟 ปรับแต่งมงกุฎ (ให้เล็กและเด้งน้อยลง เพื่อให้อยู่กับตัวเลขสวยๆ) */
+        /* 🌟 ปรับแต่งมงกุฎ (ให้เล็กและเด้งน้อยลง) */
         @keyframes bounce-rotate-small {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-5px) rotate(5deg); }
         }
         .crown-animate {
             display: inline-block;
-            /* ลดขนาดมงกุฎให้พอดีกับตัวเลข */
-            font-size: 1.5rem; /* text-2xl */
-            /* เปลี่ยน animation เป็นแบบเล็ก */
+            font-size: 1.5rem; 
             animation: bounce-rotate-small 1.2s infinite ease-in-out;
-            margin-left: 8px; /* ขยับห่างจากตัวเลขนิดนึง */
+            margin-left: 8px; 
             filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5));
         }
 
-        /* --- 🌟 Highlight: Effect ผู้ชนะแบบ KANPAO POPULAR VOTE --- */
-
-        /* 1. สร้างกรอบทองที่หายใจได้ (Gold Pulse) */
+        /* --- 🌟 Effect ผู้ชนะแบบ KANPAO POPULAR VOTE --- */
         @keyframes gold-pulse {
-            0% {
-                border-color: #FFD700;
-                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
-            }
-            70% {
-                border-color: #FFAA00;
-                box-shadow: 0 0 25px 10px rgba(255, 215, 0, 0);
-            }
-            100% {
-                border-color: #FFD700;
-                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
-            }
+            0% { border-color: #FFD700; box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { border-color: #FFAA00; box-shadow: 0 0 25px 10px rgba(255, 215, 0, 0); }
+            100% { border-color: #FFD700; box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
         }
 
-        /* 2. สร้างแสงเงาปาดผ่าน (Sweeping Shine) */
         @keyframes shimmer-sweep {
             0% { left: -150%; opacity: 0; }
             40% { opacity: 0.8; }
@@ -77,18 +63,14 @@
         }
 
         .winner-card {
-            position: relative; /* สำคัญ: เพื่อให้แสงปาดอยู่ภายในกรอบ */
-            overflow: hidden;   /* ตัดส่วนเกินของแสงออก */
-            
-            border-color: #FFD700 !important; /* บังคับเป็นสีทอง */
+            position: relative;
+            overflow: hidden;
+            border-color: #FFD700 !important;
             z-index: 20;
-            transform: scale(1.02); /* ขยายใหญ่ขึ้นนิดหน่อย */
-            
-            /* เรียกใช้ Animation กรอบทอง */
+            transform: scale(1.02);
             animation: gold-pulse 2s infinite;
         }
 
-        /* สร้าง Layer แสงปาดสีขาวจางๆ */
         .winner-card::after {
             content: "";
             position: absolute;
@@ -96,8 +78,6 @@
             left: -150%;
             width: 80%;
             height: 100%;
-            
-            /* ไล่สีจากใส -> ขาวจ้า -> ใส (ทำเป็นแทบเฉียง) */
             background: linear-gradient(
                 to right,
                 rgba(255, 255, 255, 0) 0%,
@@ -106,130 +86,128 @@
                 rgba(255, 255, 255, 0.1) 60%,
                 rgba(255, 255, 255, 0) 100%
             );
-            
-            transform: skewX(-25deg); /* เอียงแท่งแสง */
-            pointer-events: none; /* ให้คลิกทะลุได้ */
-            
-            /* เรียกใช้ Animation แสงปาด */
+            transform: skewX(-25deg);
+            pointer-events: none;
             animation: shimmer-sweep 2.5s infinite linear;
         }
-
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen py-8 px-4">
+<body class="bg-slate-100 min-h-screen py-8 px-4 flex flex-col justify-between">
 
-    <header class="mb-10 max-w-5xl mx-auto relative">
-        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-center md:text-left">
-            <img src="https://kanpaohealth.github.io/qrcode/images/kanpao-logo-160px.png" 
-                 alt="อบจ.กาญจนบุรี" 
-                 class="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-sm">
-            <div>
-                <h1 class="text-2xl md:text-4xl font-bold text-slate-800 leading-tight">
-                    ผลคะแนนเลือกตั้งสมาชิกสภาองค์การบริหารส่วนจังหวัด<br class="hidden md:block">
-                    อ.ท่ามะกา เขต 5 จ.กาญจนบุรี
-                </h1>
-                <p class="text-blue-700 mt-2 text-xl md:text-2xl font-semibold">
-                    วันที่ 25 มกราคม 2569
-                </p>
-                <p class="text-slate-400 text-sm mt-1 font-light">
-                    (ข้อมูลอัปเดตอัตโนมัติทุก 60 วินาที)
-                </p>
+    <div>
+        <header class="mb-10 max-w-5xl mx-auto relative">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-center md:text-left">
+                <img src="https://kanpaohealth.github.io/qrcode/images/kanpao-logo-160px.png" 
+                     alt="อบจ.กาญจนบุรี" 
+                     class="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-sm">
+                <div>
+                    <h1 class="text-2xl md:text-4xl font-bold text-slate-800 leading-tight">
+                        ผลคะแนนเลือกตั้งสมาชิกสภาองค์การบริหารส่วนจังหวัด<br class="hidden md:block">
+                        อ.ท่ามะกา เขต 5 จ.กาญจนบุรี
+                    </h1>
+                    <p class="text-blue-700 mt-2 text-xl md:text-2xl font-semibold">
+                        วันที่ 25 มกราคม 2569
+                    </p>
+                    <p class="text-slate-400 text-sm mt-1 font-light">
+                        (ข้อมูลอัปเดตอัตโนมัติทุก 30 วินาที)
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="border-b-2 border-slate-200 w-3/4 mx-auto mt-6"></div>
-    </header>
-    
-    <main class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row gap-6 justify-center items-stretch">
+            <div class="border-b-2 border-slate-200 w-3/4 mx-auto mt-6"></div>
+        </header>
+        
+        <main class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-6 justify-center items-stretch">
 
-            <div id="cand1-card" class="animate-card bg-white rounded-3xl shadow-lg overflow-hidden w-full md:w-1/2 border-t-8 border-pink-700 transition-all duration-300">
-                <div class="p-6 md:p-8">
-                    <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
-                        <div class="relative shrink-0">
-                            <img id="cand1-img" src="https://via.placeholder.com/200?text=No.1" 
-                                 class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-[6px] border-pink-200 shadow-md">
-                            <div class="absolute bottom-0 right-0 bg-pink-700 text-white text-3xl font-bold w-14 h-14 rounded-full flex items-center justify-center border-4 border-white shadow-sm">
-                                <span id="cand1-num">1</span>
+                <div id="cand1-card" class="animate-card bg-white rounded-3xl shadow-lg overflow-hidden w-full md:w-1/2 border-t-8 border-pink-700 transition-all duration-300">
+                    <div class="p-6 md:p-8">
+                        <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
+                            <div class="relative shrink-0">
+                                <img id="cand1-img" src="https://via.placeholder.com/200?text=No.1" 
+                                     class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-[6px] border-pink-200 shadow-md">
+                                <div class="absolute bottom-0 right-0 bg-pink-700 text-white text-3xl font-bold w-14 h-14 rounded-full flex items-center justify-center border-4 border-white shadow-sm">
+                                    <span id="cand1-num">1</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 mt-2">
+                                <h2 class="text-xl md:text-2xl text-pink-800 font-bold uppercase tracking-wide">
+                                    ผู้สมัครหมายเลข <span id="cand1-num-text" class="inline-flex items-center">1</span>
+                                </h2>
+                                <h3 id="cand1-name" class="text-xl md:text-3xl font-bold text-slate-800 mt-2 leading-tight">
+                                    กำลังโหลด...
+                                </h3>
+                                <div id="cand1-winner-msg" class="mt-2 h-8"></div>
                             </div>
                         </div>
-                        <div class="flex-1 mt-2">
-                            <h2 class="text-2xl text-pink-800 font-bold uppercase tracking-wide">
-                                ผู้สมัครหมายเลข <span id="cand1-num-text" class="inline-flex items-center">1</span>
-                            </h2>
-                            <h3 id="cand1-name" class="text-3xl md:text-4xl font-bold text-slate-800 mt-2 leading-tight">
-                                กำลังโหลด...
-                            </h3>
-                            <div id="cand1-winner-msg" class="mt-2 h-8"></div>
-                        </div>
-                    </div>
-                    <div class="mt-4 p-6 bg-pink-50 rounded-2xl border border-pink-200">
-                         <div class="flex justify-between items-end mb-2">
-                            <span class="text-slate-600 text-lg">คะแนนรวม</span>
-                            <div id="cand1-score-container" class="flex items-center">
-                                <span id="cand1-score" class="text-5xl font-bold text-pink-800 tracking-tight">0</span>
+                        <div class="mt-4 p-6 bg-pink-50 rounded-2xl border border-pink-200">
+                             <div class="flex justify-between items-end mb-2">
+                                <span class="text-slate-600 text-lg">คะแนนรวม</span>
+                                <div id="cand1-score-container" class="flex items-center">
+                                    <span id="cand1-score" class="text-5xl font-bold text-pink-800 tracking-tight">0</span>
+                                    </div>
+                            </div>
+                            <div class="w-full bg-pink-200 rounded-full h-8 p-1 shadow-inner relative">
+                                <div id="cand1-bar" class="bar-transition bg-gradient-to-r from-pink-600 to-pink-800 h-full rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: 0%">
+                                    <span id="cand1-percent" class="text-white text-sm font-bold drop-shadow-md">0%</span>
                                 </div>
-                        </div>
-                        <div class="w-full bg-pink-200 rounded-full h-8 p-1 shadow-inner relative">
-                            <div id="cand1-bar" class="bar-transition bg-gradient-to-r from-pink-600 to-pink-800 h-full rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: 0%">
-                                <span id="cand1-percent" class="text-white text-sm font-bold drop-shadow-md">0%</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="cand2-card" class="animate-card bg-white rounded-3xl shadow-lg overflow-hidden w-full md:w-1/2 border-t-8 border-pink-500 transition-all duration-300" style="animation-delay: 0.1s;">
-                <div class="p-6 md:p-8">
-                    <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
-                        <div class="relative shrink-0">
-                            <img id="cand2-img" src="https://via.placeholder.com/200?text=No.2" 
-                                 class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-[6px] border-pink-100 shadow-md">
-                            <div class="absolute bottom-0 right-0 bg-pink-500 text-white text-3xl font-bold w-14 h-14 rounded-full flex items-center justify-center border-4 border-white shadow-sm">
-                                <span id="cand2-num">2</span>
+                <div id="cand2-card" class="animate-card bg-white rounded-3xl shadow-lg overflow-hidden w-full md:w-1/2 border-t-8 border-pink-500 transition-all duration-300" style="animation-delay: 0.1s;">
+                    <div class="p-6 md:p-8">
+                        <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
+                            <div class="relative shrink-0">
+                                <img id="cand2-img" src="https://via.placeholder.com/200?text=No.2" 
+                                     class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-[6px] border-pink-100 shadow-md">
+                                <div class="absolute bottom-0 right-0 bg-pink-500 text-white text-3xl font-bold w-14 h-14 rounded-full flex items-center justify-center border-4 border-white shadow-sm">
+                                    <span id="cand2-num">2</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 mt-2">
+                                <h2 class="text-xl md:text-2xl text-pink-600 font-bold uppercase tracking-wide">
+                                    ผู้สมัครหมายเลข <span id="cand2-num-text" class="inline-flex items-center">2</span>
+                                </h2>
+                                <h3 id="cand2-name" class="text-xl md:text-3xl font-bold text-slate-800 mt-2 leading-tight">
+                                    กำลังโหลด...
+                                </h3>
+                                 <div id="cand2-winner-msg" class="mt-2 h-8"></div>
                             </div>
                         </div>
-                        <div class="flex-1 mt-2">
-                            <h2 class="text-2xl text-pink-600 font-bold uppercase tracking-wide">
-                                ผู้สมัครหมายเลข <span id="cand2-num-text" class="inline-flex items-center">2</span>
-                            </h2>
-                             <h3 id="cand2-name" class="text-3xl md:text-4xl font-bold text-slate-800 mt-2 leading-tight">
-                                กำลังโหลด...
-                            </h3>
-                             <div id="cand2-winner-msg" class="mt-2 h-8"></div>
-                        </div>
-                    </div>
-                    <div class="mt-4 p-6 bg-pink-50 rounded-2xl border border-pink-100">
-                        <div class="flex justify-between items-end mb-2">
-                            <span class="text-slate-600 text-lg">คะแนนรวม</span>
-                            <div id="cand2-score-container" class="flex items-center">
-                                <span id="cand2-score" class="text-5xl font-bold text-pink-600 tracking-tight">0</span>
+                        <div class="mt-4 p-6 bg-pink-50 rounded-2xl border border-pink-100">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-slate-600 text-lg">คะแนนรวม</span>
+                                <div id="cand2-score-container" class="flex items-center">
+                                    <span id="cand2-score" class="text-5xl font-bold text-pink-600 tracking-tight">0</span>
+                                    </div>
+                            </div>
+                            <div class="w-full bg-pink-100 rounded-full h-8 p-1 shadow-inner relative">
+                                <div id="cand2-bar" class="bar-transition bg-gradient-to-r from-pink-400 to-pink-600 h-full rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: 0%">
+                                    <span id="cand2-percent" class="text-white text-sm font-bold drop-shadow-md">0%</span>
                                 </div>
-                        </div>
-                        <div class="w-full bg-pink-100 rounded-full h-8 p-1 shadow-inner relative">
-                            <div id="cand2-bar" class="bar-transition bg-gradient-to-r from-pink-400 to-pink-600 h-full rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: 0%">
-                                <span id="cand2-percent" class="text-white text-sm font-bold drop-shadow-md">0%</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-        </div>
-    </main>
+            </div>
+        </main>
+    </div>
 
     <footer class="mt-12 mb-6 text-center">
-        <div class="border-t border-slate-200 w-1/2 mx-auto mb-4"></div> <p class="text-xs text-gray-400 font-light">
+        <div class="border-t border-slate-200 w-1/2 mx-auto mb-4"></div>
+        <p class="text-xs text-gray-400 font-light">
             © 2026 All Rights Reserved Powered by 
             <a href="https://artwansawang.web.app/" target="_blank" class="hover:text-gray-600 transition-colors underline decoration-dotted">
                 Mr.Wansawang Kanchanakaree
             </a>
         </p>
     </footer>
+
     <script>
         // ************************************************
         const DATA_URL = 'https://kanpao.github.io/vote/data.json'; 
-        
-        // ตั้งเวลาฉลอง
         const CELEBRATE_DATE = new Date('2026-01-14T00:01:00'); 
         // ************************************************
 
@@ -270,7 +248,6 @@
                 if(c2.imageUrl) document.getElementById('cand2-img').src = c2.imageUrl;
             }
 
-            // ส่งหมายเลขไปด้วยเพื่อใช้ในการ Reset
             checkCelebration(c1.score, c2.score, c1.name, c2.name, c1.number, c2.number);
         }
 
@@ -286,7 +263,6 @@
             }
 
             const trophyHTML = '<span class="trophy-animate text-5xl">🏆</span>';
-            // ปรับขนาดมงกุฎให้เล็กลงใน JS ด้วย
             const crownHTML = '<span class="crown-animate">👑</span>';
             const winnerTextHTML = '<p class="text-lg text-yellow-600 font-bold animate-pulse mt-1 drop-shadow-sm leading-tight">🏅 ผู้ชนะคะแนนเลือกตั้งอย่างไม่เป็นทางการ</p>';
 
@@ -298,31 +274,22 @@
         }
 
         function applyWinnerStyles(candId, candNum, trophy, crown, text) {
-            // ถ้วยรางวัลท้ายคะแนน
             document.getElementById(`${candId}-score-container`).insertAdjacentHTML('beforeend', trophy);
-            // ** แก้ไขใหม่: มงกุฎท้ายหมายเลข **
             document.getElementById(`${candId}-num-text`).innerHTML = `${candNum} ${crown}`;
-            // ข้อความผู้ชนะใต้ชื่อ
             document.getElementById(`${candId}-winner-msg`).innerHTML = text;
-            // กรอบทองเรืองแสง
             document.getElementById(`${candId}-card`).classList.add('winner-card');
         }
 
         function resetWinnerStyles(name1, name2, num1, num2) {
-            // ลบถ้วยและมงกุฎ
             document.querySelectorAll('.trophy-animate, .crown-animate').forEach(el => el.remove());
             
-            // รีเซ็ตชื่อและหมายเลขให้เป็นค่าเดิม
             document.getElementById('cand1-name').innerText = name1;
             document.getElementById('cand2-name').innerText = name2;
-            // ** แก้ไขใหม่: รีเซ็ตหมายเลขให้ไม่มีมงกุฎ **
             document.getElementById('cand1-num-text').innerText = num1;
             document.getElementById('cand2-num-text').innerText = num2;
 
-            // ลบข้อความผู้ชนะ
             document.getElementById('cand1-winner-msg').innerHTML = '';
             document.getElementById('cand2-winner-msg').innerHTML = '';
-            // เอา class ออกเพื่อหยุด Effect
             document.getElementById('cand1-card').classList.remove('winner-card');
             document.getElementById('cand2-card').classList.remove('winner-card');
         }

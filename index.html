@@ -208,7 +208,7 @@
     <script>
         // ************************************************
         const DATA_URL = 'https://kanpao.github.io/vote/data.json'; 
-        const CELEBRATE_DATE = new Date('2026-01-16T09:11:00'); 
+        const CELEBRATE_DATE = new Date('2026-01-16T09:16:00'); 
         // ************************************************
 
         let hasFiredConfetti = false;
@@ -311,7 +311,19 @@
 
         fetchData();
         setInterval(fetchData, 30000);
-    </script>
+    // ฟังก์ชันเช็คเวลาแบบ Real-time (ทำงานทุก 1 วินาที)
+        setInterval(() => {
+            const now = new Date();
+            // ถ้าถึงเวลา และยังไม่เคยจุดพลุ
+            if (now >= CELEBRATE_DATE && !hasFiredConfetti) {
+                fireworks();
+                hasFiredConfetti = true; // ป้องกันจุดซ้ำ
+                
+                // สั่งให้ดึงข้อมูลคะแนนล่าสุดทันที (เผื่อผลชนะเปลี่ยน)
+                fetchData(); 
+            }
+        }, 1000); // เช็คทุก 1 วินาที (1000ms)
 
+    </script>
 </body>
 </html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/ico" href="https://kanpao.github.io/images/favicon.ico">
+    <link rel="icon" href="https://kanpao.github.io/images/favicon.png" sizes="16x16 32x32 64x64" type="image/png">
+    <title>Dashboard ผลการเลือกตั้ง Real-time</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Kanit', sans-serif; }
+        
+        /* Effect กราฟไหล */
+        .bar-transition { transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Animation การ์ดตอนโหลด */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-card { animation: fadeIn 0.5s ease-out forwards; }
+
+        /* --- Animation ของรางวัล --- */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px) scale(1.1); }
+        }
+        .trophy-animate {
+            display: inline-block;
+            animation: bounce 1s infinite;
+            margin-left: 10px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+
+        /* 🌟 ปรับแต่งมงกุฎ (ให้เล็กและเด้งน้อยลง) */
+        @keyframes bounce-rotate-small {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(5deg); }
+        }
+        .crown-animate {
+            display: inline-block;
+            font-size: 1.5rem; 
+            animation: bounce-rotate-small 1.2s infinite ease-in-out;
+            margin-left: 8px; 
+            filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5));
+        }
+
+        /* --- 🌟 Effect ผู้ชนะแบบ KANPAO POPULAR VOTE --- */
+        @keyframes gold-pulse {
+            0% { border-color: #FFD700; box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { border-color: #FFAA00; box-shadow: 0 0 25px 10px rgba(255, 215, 0, 0); }
+            100% { border-color: #FFD700; box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        @keyframes shimmer-sweep {
+            0% { left: -150%; opacity: 0; }
+            40% { opacity: 0.8; }
+            100% { left: 150%; opacity: 0; }
+        }
+
+        .winner-card {
+            position: relative;
+            overflow: hidden;
+            border-color: #FFD700 !important;
+            z-index: 20;
+            transform: scale(1.02);
+            animation: gold-pulse 2s infinite;
+        }
+
+        .winner-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 80%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 40%,
+                rgba(255, 255, 255, 0.6) 50%, 
+                rgba(255, 255, 255, 0.1) 60%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            pointer-events: none;
+            animation: shimmer-sweep 2.5s infinite linear;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen py-8 px-4 flex flex-col justify-between">
+
+    <div>
+        <header class="mb-10 max-w-5xl mx-auto relative">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-center md:text-left">
+                <img src="https://kanpao.github.io/images/kanpao-logo-160px.png" 
+                     alt="อบจ.กาญจนบุรี" 
+                     class="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-sm">
+                <div>
+                    <h1 class="text-2xl md:text-4xl font-bold text-slate-800 leading-tight">
+                        ผลคะแนนเลือกตั้งสมาชิกสภาองค์การบริหารส่วนจังหวัด<br class="hidden md:block">
+                        อ.ท่ามะกา เขต 5 จ.กาญจนบุรี
+                    </h1>
+                    <p class="text-blue-700 mt-2 text-xl md:text-2xl font-semibold">
+                        วันที่ 25 มกราคม 2569
+                    </p>
+                    <p class="text-slate-400 text-sm mt-1 font-light">
+                        (ข้อมูลอัปเดตอัตโนมัติทุก 60 วินาที)
+                    </p>
+                </div>
+            </div>
+            <div class="border-b-2 border-slate-200 w-3/4 mx-auto mt-6"></div>
+        </header>
+        
+        <main class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-6 justify-center items-stretch">
+
+                <div id="cand1-card" class="animate-card bg-white rounded-3xl shadow-lg overflow-hidden w-full md:w-1/2 border-t-8 border-pink-700 transition-all duration-300">
+                    <div class="p-6 md:p-8">
+                        <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
+                            <div class="relative shrink-0">
+                                <img id="cand1-img" src="https://via.placeholder.com/200?text=No.1" 
+                                     class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-[6px] border-pink-200 shadow-md">
+                                <div class="absolute bottom-0 right-0 bg-pink-700 text-white text-3xl font-bold w-14 h-14 rounded-full flex items-center justify-center border-4 border-white shadow-sm">
+                                    <span id="cand1-num">1</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 mt-2">
+                                <h2 class="text-xl md:text-2xl text-pink-800 font-bold uppercase tracking-wide">
+                                    ผู้สมัครหมายเลข <span id="cand1-num-text" class="inline-flex items-center">1</span>
+                                </h2>
+                                <h3 id="cand1-name" class="text-xl md:text-3xl font-bold text-slate-800 mt-2 leading-tight">
+                                    กำลังโหลด...
+                                </h3>
+                                <div id="cand1-winner-msg" class="mt-2 h-8"></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-6 bg-pink-50 rounded-2xl border border-pink-200">
+                             <div class="flex justify-between items-end mb-2">
+                                <span class="text-slate-600 text-lg">คะแนนรวม</span>
+                                <div id="cand1-score-container" class="flex items-center">
+                                    <span id="cand1-score" class="text-5xl font-bold text-pink-800 tracking-tight">0</span>
+                                    </div>
+                            </div>
+                            <div class="w-full bg-pink-200 rounded-full h-8 p-1 shadow-inner relative">
+                                <div id="cand1-bar" class="bar-transition bg-gradient-to-r from-pink-600 to-pink-800 h-full rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: 0%">
+                                    <span id="cand1-percent" class="text-white text-sm font-bold drop-shadow-md">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cand2-card" class="animate-card bg-white rounded-3xl shadow-lg overflow-hidden w-full md:w-1/2 border-t-8 border-pink-500 transition-all duration-300" style="animation-delay: 0.1s;">
+                    <div class="p-6 md:p-8">
+                        <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6 text-center md:text-left">
+                            <div class="relative shrink-0">
+                                <img id="cand2-img" src="https://via.placeholder.com/200?text=No.2" 
+                                     class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-[6px] border-pink-100 shadow-md">
+                                <div class="absolute bottom-0 right-0 bg-pink-500 text-white text-3xl font-bold w-14 h-14 rounded-full flex items-center justify-center border-4 border-white shadow-sm">
+                                    <span id="cand2-num">2</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 mt-2">
+                                <h2 class="text-xl md:text-2xl text-pink-600 font-bold uppercase tracking-wide">
+                                    ผู้สมัครหมายเลข <span id="cand2-num-text" class="inline-flex items-center">2</span>
+                                </h2>
+                                <h3 id="cand2-name" class="text-xl md:text-3xl font-bold text-slate-800 mt-2 leading-tight">
+                                    กำลังโหลด...
+                                </h3>
+                                 <div id="cand2-winner-msg" class="mt-2 h-8"></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-6 bg-pink-50 rounded-2xl border border-pink-100">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-slate-600 text-lg">คะแนนรวม</span>
+                                <div id="cand2-score-container" class="flex items-center">
+                                    <span id="cand2-score" class="text-5xl font-bold text-pink-600 tracking-tight">0</span>
+                                    </div>
+                            </div>
+                            <div class="w-full bg-pink-100 rounded-full h-8 p-1 shadow-inner relative">
+                                <div id="cand2-bar" class="bar-transition bg-gradient-to-r from-pink-400 to-pink-600 h-full rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: 0%">
+                                    <span id="cand2-percent" class="text-white text-sm font-bold drop-shadow-md">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <footer class="mt-12 mb-6 text-center">
+        <div class="border-t border-slate-200 w-1/2 mx-auto mb-4"></div>
+        <p class="text-xs text-gray-400 font-light">
+            © 2026 All Rights Reserved Powered by 
+            <a href="https://artwansawang.web.app/" target="_blank" class="hover:text-gray-600 transition-colors underline decoration-dotted">
+                Mr.Wansawang Kanchanakaree
+            </a>
+        </p>
+    </footer>
+
+    <script>
+        // ************************************************
+        const DATA_URL = 'https://kanpao.github.io/vote/data.json'; 
+        const CELEBRATE_DATE = new Date('2026-01-25T21:21:00'); 
+        // ************************************************
+
+        let hasFiredConfetti = false;
+
+        async function fetchData() {
+            try {
+                const response = await fetch(DATA_URL + '?t=' + new Date().getTime());
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                updateDashboard(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function updateDashboard(data) {
+            const fmt = (num) => num.toLocaleString();
+            
+            const c1 = data[0] || { score: 0, name: "...", number: "1" };
+            const c2 = data[1] || { score: 0, name: "...", number: "2" };
+
+            const totalVotes = c1.score + c2.score;
+            const percent1 = totalVotes > 0 ? (c1.score / totalVotes) * 100 : 0;
+            const percent2 = totalVotes > 0 ? (c2.score / totalVotes) * 100 : 0;
+
+            if (data[0]) {
+                document.getElementById('cand1-score').innerText = fmt(c1.score);
+                document.getElementById('cand1-bar').style.width = percent1 + '%';
+                document.getElementById('cand1-percent').innerText = percent1.toFixed(1) + '%';
+                if(c1.imageUrl) document.getElementById('cand1-img').src = c1.imageUrl;
+            }
+
+            if (data[1]) {
+                document.getElementById('cand2-score').innerText = fmt(c2.score);
+                document.getElementById('cand2-bar').style.width = percent2 + '%';
+                document.getElementById('cand2-percent').innerText = percent2.toFixed(1) + '%';
+                if(c2.imageUrl) document.getElementById('cand2-img').src = c2.imageUrl;
+            }
+
+            checkCelebration(c1.score, c2.score, c1.name, c2.name, c1.number, c2.number);
+        }
+
+        function checkCelebration(score1, score2, name1, name2, num1, num2) {
+            resetWinnerStyles(name1, name2, num1, num2);
+
+            const now = new Date();
+            if (now < CELEBRATE_DATE) return;
+
+            if (!hasFiredConfetti) {
+                fireworks();
+                hasFiredConfetti = true;
+            }
+
+            const trophyHTML = '<span class="trophy-animate text-5xl">🏆</span>';
+            const crownHTML = '<span class="crown-animate">👑</span>';
+            const winnerTextHTML = '<p class="text-lg text-yellow-600 font-bold animate-pulse mt-1 drop-shadow-sm leading-tight">🏅 ผู้ชนะคะแนนเลือกตั้งอย่างไม่เป็นทางการ</p>';
+
+            if (score1 > score2) {
+                applyWinnerStyles('cand1', num1, trophyHTML, crownHTML, winnerTextHTML);
+            } else if (score2 > score1) {
+                applyWinnerStyles('cand2', num2, trophyHTML, crownHTML, winnerTextHTML);
+            }
+        }
+
+        function applyWinnerStyles(candId, candNum, trophy, crown, text) {
+            document.getElementById(`${candId}-score-container`).insertAdjacentHTML('beforeend', trophy);
+            document.getElementById(`${candId}-num-text`).innerHTML = `${candNum} ${crown}`;
+            document.getElementById(`${candId}-winner-msg`).innerHTML = text;
+            document.getElementById(`${candId}-card`).classList.add('winner-card');
+        }
+
+        function resetWinnerStyles(name1, name2, num1, num2) {
+            document.querySelectorAll('.trophy-animate, .crown-animate').forEach(el => el.remove());
+            
+            document.getElementById('cand1-name').innerText = name1;
+            document.getElementById('cand2-name').innerText = name2;
+            document.getElementById('cand1-num-text').innerText = num1;
+            document.getElementById('cand2-num-text').innerText = num2;
+
+            document.getElementById('cand1-winner-msg').innerHTML = '';
+            document.getElementById('cand2-winner-msg').innerHTML = '';
+            document.getElementById('cand1-card').classList.remove('winner-card');
+            document.getElementById('cand2-card').classList.remove('winner-card');
+        }
+
+        function fireworks() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 50 };
+            var random = function(min, max) { return Math.random() * (max - min) + min; };
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+              if (timeLeft <= 0) return clearInterval(interval);
+              var particleCount = 50 * (timeLeft / duration);
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: random(0.1, 0.3), y: Math.random() - 0.2 } }));
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: random(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        fetchData();
+        setInterval(fetchData, 30000);
+    // ฟังก์ชันเช็คเวลาแบบ Real-time (ทำงานทุก 1 วินาที)
+        setInterval(() => {
+            const now = new Date();
+            // ถ้าถึงเวลา และยังไม่เคยจุดพลุ
+            if (now >= CELEBRATE_DATE && !hasFiredConfetti) {
+                fireworks();
+                hasFiredConfetti = true; // ป้องกันจุดซ้ำ
+                
+                // สั่งให้ดึงข้อมูลคะแนนล่าสุดทันที (เผื่อผลชนะเปลี่ยน)
+                fetchData(); 
+            }
+        }, 1000); // เช็คทุก 1 วินาที (1000ms)
+
+    </script>
+</body>
+</html>

@@ -109,7 +109,7 @@
                         วันที่ 25 มกราคม 2569
                     </p>
                     <p class="text-slate-400 text-sm mt-1 font-light">
-                        (ข้อมูลอัปเดตอัตโนมัติทุก 15 วินาที)
+                        (ข้อมูลอัปเดตอัตโนมัติ real time)
                     </p>
                 </div>
             </div>
@@ -247,7 +247,7 @@
                 document.getElementById('cand1-percent').innerText = percent1.toFixed(1) + '%';
                 document.getElementById('cand1-name').innerText = c1.name; 
                 // ถ้าอยากอัปเดตชื่อ/รูปด้วย ให้เปิดบรรทัดล่าง
-                // if(c1.imageUrl) document.getElementById('cand1-img').src = c1.imageUrl;
+                 if(c1.imageUrl) document.getElementById('cand1-img').src = c1.imageUrl;
             }
 
             // อัปเดตคน 2
@@ -256,7 +256,7 @@
                 document.getElementById('cand2-bar').style.width = percent2 + '%';
                 document.getElementById('cand2-percent').innerText = percent2.toFixed(1) + '%';
                 document.getElementById('cand2-name').innerText = c2.name;
-                // if(c2.imageUrl) document.getElementById('cand2-img').src = c2.imageUrl;
+                 if(c2.imageUrl) document.getElementById('cand2-img').src = c2.imageUrl;
             }
 
             // ส่งค่า status ไปเช็คว่าจะฉลองไหม

@@ -208,55 +208,77 @@
     <script>
         // ************************************************
         const DATA_URL = 'https://kanpao-vote-default-rtdb.asia-southeast1.firebasedatabase.app/election-data.json';
-        const CELEBRATE_DATE = new Date('2026-01-25T21:21:00'); 
+        // const CELEBRATE_DATE = new Date('2026-01-25T21:21:00'); 
         // ************************************************
+
+        const DATA_URL = 'https://ชื่อโปรเจกต์ของคุณ.firebaseio.com/election-data.json'; 
+        
+        // *** ไม่ต้องตั้งเวลา CELEBRATE_DATE แล้ว ลบออกได้เลย ***
 
         let hasFiredConfetti = false;
 
         async function fetchData() {
             try {
+                // เติม timestamp กัน cache
                 const response = await fetch(DATA_URL + '?t=' + new Date().getTime());
                 if (!response.ok) throw new Error('Network response was not ok');
-                const data = await response.json();
-                updateDashboard(data);
+                const jsonData = await response.json();
+                
+                // แยกข้อมูล สถานะ กับ รายชื่อ ออกจากกัน
+                if(jsonData) {
+                    updateDashboard(jsonData.candidates, jsonData.status);
+                }
             } catch (error) {
                 console.error('Error:', error);
             }
         }
 
-        function updateDashboard(data) {
+        function updateDashboard(candidatesData, status) {
             const fmt = (num) => num.toLocaleString();
             
-            const c1 = data[0] || { score: 0, name: "...", number: "1" };
-            const c2 = data[1] || { score: 0, name: "...", number: "2" };
+            // ป้องกัน error กรณีข้อมูลว่าง
+            const list = candidatesData || [];
+            const c1 = list[0] || { score: 0, name: "...", number: "1" };
+            const c2 = list[1] || { score: 0, name: "...", number: "2" };
 
             const totalVotes = c1.score + c2.score;
             const percent1 = totalVotes > 0 ? (c1.score / totalVotes) * 100 : 0;
             const percent2 = totalVotes > 0 ? (c2.score / totalVotes) * 100 : 0;
 
-            if (data[0]) {
+            // อัปเดตคน 1
+            if (list[0]) {
                 document.getElementById('cand1-score').innerText = fmt(c1.score);
                 document.getElementById('cand1-bar').style.width = percent1 + '%';
                 document.getElementById('cand1-percent').innerText = percent1.toFixed(1) + '%';
-                if(c1.imageUrl) document.getElementById('cand1-img').src = c1.imageUrl;
+                document.getElementById('cand1-name').innerText = c1.name; 
+                // ถ้าอยากอัปเดตชื่อ/รูปด้วย ให้เปิดบรรทัดล่าง
+                // if(c1.imageUrl) document.getElementById('cand1-img').src = c1.imageUrl;
             }
 
-            if (data[1]) {
+            // อัปเดตคน 2
+            if (list[1]) {
                 document.getElementById('cand2-score').innerText = fmt(c2.score);
                 document.getElementById('cand2-bar').style.width = percent2 + '%';
                 document.getElementById('cand2-percent').innerText = percent2.toFixed(1) + '%';
-                if(c2.imageUrl) document.getElementById('cand2-img').src = c2.imageUrl;
+                document.getElementById('cand2-name').innerText = c2.name;
+                // if(c2.imageUrl) document.getElementById('cand2-img').src = c2.imageUrl;
             }
 
-            checkCelebration(c1.score, c2.score, c1.name, c2.name, c1.number, c2.number);
+            // ส่งค่า status ไปเช็คว่าจะฉลองไหม
+            checkCelebration(c1.score, c2.score, c1.name, c2.name, c1.number, c2.number, status);
         }
 
-        function checkCelebration(score1, score2, name1, name2, num1, num2) {
+        function checkCelebration(score1, score2, name1, name2, num1, num2, status) {
+            // 1. ล้างค่าเดิมก่อนเสมอ
             resetWinnerStyles(name1, name2, num1, num2);
 
-            const now = new Date();
-            if (now < CELEBRATE_DATE) return;
+            // 2. เช็คเงื่อนไข: ถ้าไม่ใช่ "ON" ให้จบการทำงานทันที (ไม่ฉลอง)
+            if (status !== 'ON') {
+                hasFiredConfetti = false; // รีเซ็ตพลุให้จุดใหม่ได้ถ้ารอบหน้า ON
+                return; 
+            }
 
+            // 3. ถ้า ON แล้ว และยังไม่เคยจุดพลุรอบนี้ -> จุดเลย
             if (!hasFiredConfetti) {
                 fireworks();
                 hasFiredConfetti = true;
@@ -283,8 +305,11 @@
         function resetWinnerStyles(name1, name2, num1, num2) {
             document.querySelectorAll('.trophy-animate, .crown-animate').forEach(el => el.remove());
             
-            document.getElementById('cand1-name').innerText = name1;
-            document.getElementById('cand2-name').innerText = name2;
+            // รีเซ็ตชื่อกลับเป็นปกติ (ป้องกันชื่อซ้ำซ้อน)
+            // เช็คก่อนว่า element มีอยู่จริงไหมเพื่อกัน error
+            if(document.getElementById('cand1-name')) document.getElementById('cand1-name').innerText = name1;
+            if(document.getElementById('cand2-name')) document.getElementById('cand2-name').innerText = name2;
+            
             document.getElementById('cand1-num-text').innerText = num1;
             document.getElementById('cand2-num-text').innerText = num2;
 
@@ -309,21 +334,9 @@
             }, 250);
         }
 
+        // เริ่มทำงาน (เช็คทุก 1 วินาที หรือตามชอบ)
         fetchData();
-        setInterval(fetchData, 30000);
-    // ฟังก์ชันเช็คเวลาแบบ Real-time (ทำงานทุก 1 วินาที)
-        setInterval(() => {
-            const now = new Date();
-            // ถ้าถึงเวลา และยังไม่เคยจุดพลุ
-            if (now >= CELEBRATE_DATE && !hasFiredConfetti) {
-                fireworks();
-                hasFiredConfetti = true; // ป้องกันจุดซ้ำ
-                
-                // สั่งให้ดึงข้อมูลคะแนนล่าสุดทันที (เผื่อผลชนะเปลี่ยน)
-                fetchData(); 
-            }
-        }, 1000); // เช็คทุก 1 วินาที (1000ms)
-
+        setInterval(fetchData, 1000); 
     </script>
 </body>
 </html>

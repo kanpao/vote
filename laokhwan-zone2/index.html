@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/ico" href="https://kanpao.github.io/images/favicon.ico">
+    <link rel="icon" href="https://kanpao.github.io/images/favicon.png" sizes="16x16 32x32 64x64" type="image/png">
+
+    <title>ผลคะแนนเลือกตั้ง ส.อบจ. กาญจนบุรี - อ.เลาขวัญ เขต 2</title>
+    <meta name="description" content="เกาะติดผลคะแนนเลือกตั้งสมาชิกสภาองค์การบริหารส่วนจังหวัด (ส.อบจ.) อำเภอเลาขวัญ เขต 2 จังหวัดกาญจนบุรี แบบเรียลไทม์ (อย่างไม่เป็นทางการ)">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kanpao.github.io/vote/laokhwan-zone2/">
+    <meta property="og:title" content="🔴 เกาะติดผลคะแนนเลือกตั้ง ส.อบจ. - อ.เลาขวัญ เขต 2">
+    <meta property="og:description" content="ดูผลคะแนนล่าสุด! การเลือกตั้งสมาชิกสภา อบจ. กาญจนบุรี อ.เลาขวัญ เขต 2 คลิกเพื่อดูรายละเอียด">
+    
+    <meta property="og:image" content="https://kanpao.github.io/vote/images/share-cover.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ผลคะแนนเลือกตั้ง ส.อบจ. กาญจนบุรี - อ.เลาขวัญ เขต 2">
+    <meta name="twitter:description" content="รายงานผลคะแนนสด การเลือกตั้ง ส.อบจ. อ.เลาขวัญ เขต 2">
+    <meta name="twitter:image" content="https://kanpao.github.io/vote/images/share-cover.jpg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Kanit', sans-serif; }
+        .bar-transition { transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-card { animation: fadeIn 0.8s ease-out forwards; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px) scale(1.1); }
+        }
+        .trophy-animate {
+            display: inline-block;
+            animation: bounce 1s infinite;
+            margin-left: 10px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+
+        @keyframes gold-pulse {
+            0% { border-color: #FFD700; box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { border-color: #FFAA00; box-shadow: 0 0 30px 15px rgba(255, 215, 0, 0); }
+            100% { border-color: #FFD700; box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        /* Effect แสงปาดสีทอง */
+        @keyframes shimmer-sweep {
+            0% { left: -150%; opacity: 0; }
+            40% { opacity: 0.8; }
+            100% { left: 150%; opacity: 0; }
+        }
+
+        .winner-card {
+            position: relative;
+            overflow: hidden;
+            border-color: #FFD700 !important;
+            z-index: 20;
+            transform: scale(1.05);
+            animation: gold-pulse 2s infinite;
+        }
+
+        .winner-card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: -150%; width: 80%; height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.2) 40%,
+                rgba(255, 255, 255, 0.8) 50%, 
+                rgba(255, 255, 255, 0.2) 60%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            pointer-events: none;
+            animation: shimmer-sweep 3s infinite linear;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen py-8 px-4 flex flex-col justify-between">
+
+    <div>
+        <header class="mb-10 max-w-5xl mx-auto relative text-center">
+            <div class="flex flex-col items-center justify-center gap-4">
+                <img src="https://kanpao.github.io/images/kanpao-logo-160px.png" 
+                     alt="อบจ.กาญจนบุรี" 
+                     class="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-sm">
+                <div>
+                    <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-800 leading-tight">
+                        ผลคะแนนเลือกตั้งสมาชิกสภาองค์การบริหารส่วนจังหวัด<br>
+                        อ.เลาขวัญ เขต 2 จ.กาญจนบุรี
+                    </h1>
+                    <p class="text-purple-700 mt-2 text-xl md:text-2xl font-semibold">
+                        วันที่ 15 กุมภาพันธ์ 2569
+                    </p>
+                    <p class="text-slate-400 text-sm mt-1 font-light">
+                        (ข้อมูลอัปเดตอัตโนมัติ Real time)
+                    </p>
+                </div>
+            </div>
+            <div class="border-b-2 border-purple-200 w-1/2 mx-auto mt-6"></div>
+        </header>
+        
+        <main class="max-w-4xl mx-auto">
+            <div class="flex justify-center">
+
+                <div id="cand1-card" class="animate-card bg-white rounded-3xl shadow-xl overflow-hidden w-full max-w-2xl border-t-8 border-purple-600 transition-all duration-300">
+                    <div class="p-8 md:p-10">
+                        <div class="flex flex-col items-center text-center gap-6 mb-8">
+                            
+                            <div class="relative shrink-0">
+                                <img id="cand1-img" src="https://placehold.co/200x200/purple/white?text=Wait..." 
+                                     class="w-48 h-48 md:w-56 md:h-56 rounded-full object-cover border-[8px] border-purple-100 shadow-lg">
+                                <div class="absolute bottom-2 right-2 bg-purple-600 text-white text-4xl font-bold w-16 h-16 rounded-full flex items-center justify-center border-4 border-white shadow-md">
+                                    <span id="cand1-num">-</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-2">
+                                <h2 class="text-xl md:text-2xl text-purple-800 font-bold uppercase tracking-wide">
+                                    ผู้สมัครหมายเลข <span id="cand1-num-text" class="inline-flex items-center text-3xl">-</span>
+                                </h2>
+                                <h3 id="cand1-name" class="text-2xl md:text-4xl font-bold text-slate-800 mt-3 leading-tight">
+                                    กำลังโหลดข้อมูล...
+                                </h3>
+                                <div id="cand1-winner-msg" class="mt-4 h-8 flex justify-center"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-8 bg-purple-50 rounded-3xl border border-purple-200">
+                             <div class="flex flex-col items-center mb-4">
+                                <span class="text-slate-500 text-lg mb-1">คะแนนรวมทั้งหมด</span>
+                                <div id="cand1-score-container" class="flex items-center gap-3">
+                                    <span id="cand1-score" class="text-6xl md:text-7xl font-bold text-purple-800 tracking-tight drop-shadow-sm">0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="w-full bg-purple-200 rounded-full h-6 overflow-hidden relative">
+                                <div class="h-full bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 w-full animate-pulse"></div>
+                            </div>
+                            <p class="text-center text-purple-400 text-xs mt-2">
+                                * คะแนนเป็นเอกฉันท์เนื่องจากมีผู้สมัครเพียงคนเดียว
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <footer class="mt-12 mb-6 text-center">
+        <div class="border-t border-slate-200 w-1/2 mx-auto mb-4"></div>
+        <p class="text-xs text-gray-400 font-light">
+            © 2026 All Rights Reserved Powered by 
+            <a href="https://artwansawang.web.app/" target="_blank" class="hover:text-gray-600 transition-colors underline decoration-dotted">
+                Mr.Wansawang Kanchanakaree
+            </a>
+        </p>
+    </footer>
+
+    <script>
+        // ************************************************
+        const DATA_URL = 'https://kanpao-vote-default-rtdb.asia-southeast1.firebasedatabase.app/election-data.json'; 
+        // ************************************************
+
+        let hasFiredConfetti = false;
+
+        async function fetchData() {
+            try {
+                // ใส่ timestamp (?t=...) เพื่อป้องกันการจำค่าเดิม (Cache)
+                const response = await fetch(DATA_URL + '?t=' + new Date().getTime());
+                if (!response.ok) throw new Error('Network error');
+                const jsonData = await response.json();
+                
+                if(jsonData) {
+                    updateDashboard(jsonData.candidates, jsonData.status);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function updateDashboard(candidatesData, status) {
+            const fmt = (num) => num.toLocaleString();
+            const list = candidatesData || [];
+            
+            // ดึงข้อมูลคนแรก (เพราะมีคนเดียว)
+            const c1 = list[0] || { score: 0, name: "รอข้อมูล...", number: "-", imageUrl: "" };
+
+            // อัปเดตหน้าจอ
+            if (list[0]) {
+                document.getElementById('cand1-name').innerText = c1.name;
+                document.getElementById('cand1-num').innerText = c1.number;
+                document.getElementById('cand1-num-text').innerText = c1.number;
+                document.getElementById('cand1-score').innerText = fmt(c1.score);
+                
+                // รูปภาพ (ถ้ามีลิงก์)
+                if(c1.imageUrl && c1.imageUrl.startsWith('http')) {
+                    document.getElementById('cand1-img').src = c1.imageUrl;
+                }
+            }
+
+            // เช็คสถานะเปิดพลุ (ON/OFF)
+            checkCelebration(c1.score, c1.name, c1.number, status);
+        }
+
+        function checkCelebration(score, name, num, status) {
+            resetWinnerStyles(name, num);
+
+            // ถ้าสถานะไม่ใช่ ON ให้จบการทำงาน
+            if (status !== 'ON') {
+                hasFiredConfetti = false;
+                return;
+            }
+
+            // ถ้า ON แล้ว -> จุดพลุ
+            if (!hasFiredConfetti) {
+                fireworks();
+                hasFiredConfetti = true;
+            }
+
+            const trophyHTML = '<span class="trophy-animate text-5xl md:text-6xl">🏆</span>';
+            const winnerTextHTML = '<span class="px-4 py-1 rounded-full bg-yellow-100 text-yellow-700 font-bold border border-yellow-300 shadow-sm animate-pulse">✨ ได้รับการเลือกตั้ง (อย่างไม่เป็นทางการ)</span>';
+
+            // แสดงถ้วยรางวัลและข้อความผู้ชนะ
+            document.getElementById('cand1-score-container').insertAdjacentHTML('beforeend', trophyHTML);
+            document.getElementById('cand1-winner-msg').innerHTML = winnerTextHTML;
+            document.getElementById('cand1-card').classList.add('winner-card');
+        }
+
+        function resetWinnerStyles(name, num) {
+            document.querySelectorAll('.trophy-animate').forEach(el => el.remove());
+            document.getElementById('cand1-winner-msg').innerHTML = '';
+            document.getElementById('cand1-card').classList.remove('winner-card');
+        }
+
+        function fireworks() {
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 50 };
+            var random = function(min, max) { return Math.random() * (max - min) + min; };
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+              if (timeLeft <= 0) return clearInterval(interval);
+              var particleCount = 50 * (timeLeft / duration);
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: 0.5, y: 0.6 } }));
+            }, 250);
+        }
+
+        // เริ่มดึงข้อมูลทุก 1 วินาที
+        fetchData();
+        setInterval(fetchData, 1000); 
+    </script>
+
+</body>
+</html>
